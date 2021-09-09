@@ -29,14 +29,14 @@ for line in sys.stdin:
 							
 							if end_hour>=start_hour:
 								for i in range(start_hour,end_hour+1):
-									print(f"{i}\t{1}")
+									print('%s\t%s' % (i, 1))
 							else:
 								for i in range(start_hour,24):
-									print(f"{i}\t{1}")
+									print('%s\t%s' % (i, 1))
 								
 								
 								for i in range(0,end_hour+1):
-									print(f"{i}\t{1}")
+									print('%s\t%s' % (i, 1))
 							
 	
 
