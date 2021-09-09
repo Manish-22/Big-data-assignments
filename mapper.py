@@ -27,9 +27,16 @@ for line in sys.stdin:
 							start_hour=int(time1.__str__()[-8:-6])
 							end_hour=int(time2.__str__()[-8:-6])
 							
-							for i in range(start_hour,end_hour+1):
-								print(i,1)
-							
+							if end_hour>=start_hour:
+								for i in range(start_hour,end_hour+1):
+									print(f"{i}\t{1}")
+							else:
+								for i in range(start_hour,24):
+									print(f"{i}\t{1}")
+								
+								
+								for i in range(0,end_hour+1):
+									print(f"{i}\t{1}")
 							
 	
 
