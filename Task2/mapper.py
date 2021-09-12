@@ -3,6 +3,17 @@
 import sys
 import json
 from datetime import datetime as dt
+import requests
+
+if len(sys.argv)>4:
+	print("Too many args")
+	sys.exit()
+	
+if len(sys.argv)<4:
+	print("need to give LA, LO ,D")
+	sys.exit()
+	
+
 t = dict()
 
 for line in sys.stdin:
