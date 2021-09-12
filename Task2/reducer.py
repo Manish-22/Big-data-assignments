@@ -2,21 +2,16 @@
 
 import sys
 
-hourcount= {}
+statecity = {}
 
 for line in sys.stdin:
-    hour, count = line.split("\t")
-    hour = hour.strip()
-    count = count.strip()
+    state, city = line.split(" ")
+    state = state.strip()
+    city = city.strip()
 
-    try:
-        count = int(count)
-    except ValueError:
-        continue
+    if state not in statecity.keys():
+        statecity[state] = 0
+    statecity[state] += city
 
-    if hour not in hourcount.keys():
-        hourcount[hour] = 0
-    hourcount[hour]+= count
-
-for hour, count in hourcount.items():
-    print("{} {}".format(int(hour), count))
+for state, city in statecity.items():
+    print("{} {}".format(int(state), city))
