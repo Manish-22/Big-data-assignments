@@ -6,10 +6,10 @@ statecity = {}
 
 pres_state=""
 pres_city=""
-state_count=0
-city_count=0
+state_count=""
+city_count=""
 for line in sys.stdin:
-    state, city = line.split(" ")
+    state, city = line.split("\t")
     state = state.strip()
     city = city.strip()
 
@@ -19,7 +19,8 @@ for line in sys.stdin:
         state_count=0
     state_count+=1
     if pres_city =="" or pres_city!=city:
-        print(city,city_count)
+        if pres_city!=city:
+            print(city,city_count)
         pres_city=city
         city_count=0
     city_count+=1
