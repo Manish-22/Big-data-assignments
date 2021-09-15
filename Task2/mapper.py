@@ -30,4 +30,4 @@ for line in sys.stdin:
             r = requests.post(url, data=json.dumps(data),
                               headers=headers).json()
 
-            print(r["state"], r["city"])
+            print(r["state"], r["city"], sep="\t")
