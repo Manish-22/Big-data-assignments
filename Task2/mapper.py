@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import sys
 import json
 import requests
@@ -23,25 +21,13 @@ url = "http://20.185.44.219:5000/"
 for line in sys.stdin:
     idk = line.strip()
     data_dict = json.loads(line)
-    startLat = float(data_dict["Start_Lat"])
-    startLng = float(data_dict["Start_Lng"])
-    dist = sqrt((startLat-lat)**2 + (startLng-lng)**2)
-    if dist <= d:
-        data = {"latitude": startLat, "longitude": startLng}
-        r = requests.post(url, data=json.dumps(data), headers=headers).json()
-        if " " in r["city"]:
-            print(r["state"]+r["city"].replace(" ","")+"[",r["city"],sep="\t")		# North Miami and North Miami Beach so irresptive of " " , add "["
-        elif "-" in r["city"]:
-	        print(r["state"]+r["city"].replace("-","")+"[",r["city"],sep="\t")      # Coral Springs-Margate must come after Coral Springs
-        else:
-            print(r["state"]+r["city"]+"[",r["city"],sep="\t")   
-            # ord([) =91 > ord(Z) so city will be printed after derivatives
-            # but before any city with extended name like East and Eastham
-            
-            
-"""
-	ALL this manipulation is done to key only as HADOOP sorts by key( and 
-	
-	and takes any separator - that is from ord of 32(" ") to ord of 47 ("/") 
-"""
+    if data_dict["Start_Lat"] != float('nan') and data_dict["Start_Lng"] != float('nan'):
+        startLat = float(data_dict["Start_Lat"])
+        startLng = float(data_dict["Start_Lng"])
+        dist = sqrt((startLat-lat)**2 + (startLng-lng)**2)
+        if dist <= d:
+            data = {"latitude": startLat, "longitude": startLng}
+            r = requests.post(url, data=json.dumps(data),
+                              headers=headers).json()
 
+            print(r["state"], r["city"])
