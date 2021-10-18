@@ -9,7 +9,9 @@ src=None
 dest=None
 
 
-file = open("v.txt","w+")
+path = sys.argv[1]
+
+file = open(path,"w+")
 
 # read the entire line from STDIN
 for line in sys.stdin:
