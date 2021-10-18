@@ -2,12 +2,6 @@
 
 import sys
 
-src=None
-dest=None
-
-curr=None
-
-
 for line in sys.stdin:
 	line = line.strip()
 	src,dest = line.split('\t')

@@ -12,5 +12,5 @@ for line in sys.stdin:
 	line = line.strip()
 	src,dest = line.split('\t')
 	print("%s\t%s" %(src,dest))
-	
-	
+    
+    
