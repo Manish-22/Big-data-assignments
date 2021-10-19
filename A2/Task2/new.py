@@ -32,3 +32,4 @@ for f1,f2 in data.items():
     	sim_matrix[int(f1)-1][int(f11)-1] = w1  
 print(sim_matrix)
 			
+# Similarity matrix we found
