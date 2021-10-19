@@ -19,7 +19,7 @@ for line in Lines:
     x, y = line.strip().split(',')
     prev_ranks[int(x)] = int(y)
 f = open(embedded_path)
-sim_matrix = list()
+sim_matrix = []
 data = json.load(f)
 for i in range(len(data.items())):
     sim_matrix.append([0 for j in range(len(data.items()))])
