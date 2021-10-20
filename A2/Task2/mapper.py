@@ -3,10 +3,8 @@
 import math
 import json
 import sys
-
 src = None
 dest = None
-
 curr = None
 
 v_path = sys.argv[1]
@@ -21,6 +19,7 @@ for line in Lines:
 f = open(embedded_path)
 sim_matrix = []
 data = json.load(f)
+tra = [0 for i in range(len(data.items())+1)]
 for i in range(len(data.items())):
     sim_matrix.append([0 for j in range(len(data.items()))])
 for f1, f2 in data.items():
@@ -34,11 +33,13 @@ for f1, f2 in data.items():
         temp = [(f2[i] * f22[i]) for i in range(len(f2))]
         w1 = sum(temp)/(mag1*mag2)
         sim_matrix[int(f1)-1][int(f11)-1] = w1
+# print(np.array(sim_matrix))
 
 
 for line in sys.stdin:
     line = line.strip()
     src, neighbours = line.split('\t')
+    tra[int(src)] = 1
     # print("%s\t%s" % (src, neighbours))
     neighbours = neighbours.replace(
         '[', '').replace(']', '').replace(' ', '').replace('\'', '').split(',')
@@ -48,7 +49,7 @@ for line in sys.stdin:
     outgoing = len(neighbours)
     for i in range(1, len(data.items())+1):
         if i in neighbours:
-            # print(src)
+            # print(i)
             # print(prev_ranks[int(src)])
             x = 1/outgoing
             sim_matrix[int(src)-1][i-1] = (prev_ranks[int(src)]
@@ -56,7 +57,12 @@ for line in sys.stdin:
         else:
             #print(src, i)
             sim_matrix[int(src)-1][i-1] = 0
-# print(sim_matrix)
+
+for i in range(1, len(tra)):
+    if not tra[i]:
+        for j in range(len(data.items())):
+            sim_matrix[i-1][j] = 0
+# print(np.array(sim_matrix))
 for i in range(len(data.items())):
     for j in range(len(data.items())):
         print(j+1, sim_matrix[i][j])
