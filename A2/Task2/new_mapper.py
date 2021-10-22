@@ -30,7 +30,7 @@ embed_data = [i for i in data.items()]
 # print("Embed:")
 # print(embed_data)
 
-tra = [0 for i in range(len(data.items())+1)]
+tra = [0 for i in range(len(embed_data)+1)]
 
 sim_matrix =[]
 
@@ -78,7 +78,7 @@ for line in sys.stdin:
 		
 		print(i, sim_matrix[i-1])
 		
-for i in range(len(tra)):
+for i in range(1,len(tra)):
 	if tra[i]==0:
 		for i in range(1, len(embed_data)+1):
 			print(i,0)
