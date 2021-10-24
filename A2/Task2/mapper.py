@@ -14,7 +14,7 @@ Lines = file1.readlines()
 prev_ranks = dict()
 for line in Lines:
     x, y = line.strip().split(',')
-    prev_ranks[int(x)] = int(y)
+    prev_ranks[int(x)] = float(y)
 
 
 f = open(embedded_path)
@@ -42,7 +42,7 @@ for line in sys.stdin:
         mag2 = math.sqrt(sum(s2))
         temp = [f11[i]*f22[i] for i in range(len(f11))]
         w1 = sum(temp)/(mag1*mag2)
-        contribution[int(f1)-1] *= w1
+        contribution[int(f1)-1] *= w1*prev_ranks[int(f1)]
         print(f1, contribution[int(f1)-1])
     #print(src, contribution)
 # for i in range(1, len(tra)+1):
