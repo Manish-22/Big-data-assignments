@@ -14,13 +14,16 @@ Lines = file1.readlines()
 prev_ranks = dict()
 for line in Lines:
     x, y = line.strip().split(',')
-    prev_ranks[int(x)] = float(y)
+    prev_ranks[int(x)] = int(y)
 
 
 f = open(embedded_path)
 embed_data = json.load(f)
 
-tra = [0 for i in range(len(embed_data)+1)]
+all_length1 = max([int(i) for i in embed_data.keys()])
+all_length2 = min([int(i) for i in embed_data.keys()])
+all_length = all_length1 - all_length2
+tra = [0 for i in range(all_length+1)]
 
 for line in sys.stdin:
 
@@ -30,10 +33,10 @@ for line in sys.stdin:
         '[', '').replace(']', '').replace(' ', '').replace('\'', '').split(',')
     outgoing = len(neighbours)
     # print(neighbours)
-    tra[int(src)] = 1
+    # tra[int(src)] = 1
     contribution = [
-        1/outgoing if str(i) in neighbours else 0 for i in range(1, len(embed_data)+1)]
-    #print(src, embed_data)
+        1/outgoing if str(i) in neighbours else 0 for i in range(1, all_length1+2)]
+    # print(src, embed_data)
     f22 = embed_data[src]
     s1 = [i*i for i in f22]
     mag1 = math.sqrt(sum(s1))
@@ -42,9 +45,9 @@ for line in sys.stdin:
         mag2 = math.sqrt(sum(s2))
         temp = [f11[i]*f22[i] for i in range(len(f11))]
         w1 = sum(temp)/(mag1*mag2)
-        contribution[int(f1)-1] *= w1*prev_ranks[int(f1)]
+        contribution[int(f1)-1] *= w1
         print(f1, contribution[int(f1)-1])
-    #print(src, contribution)
+    # print(src, contribution)
 # for i in range(1, len(tra)+1):
 #     if not tra[i]:
 #         print(i,)
