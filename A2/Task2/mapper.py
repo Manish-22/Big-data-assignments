@@ -23,7 +23,7 @@ embed_data = json.load(f)
 all_length1 = max([int(i) for i in embed_data.keys()])
 all_length2 = min([int(i) for i in embed_data.keys()])
 all_length = all_length1 - all_length2
-tra = [0 for i in range(all_length+1)]
+#tra = [0 for i in range(all_length+1)]
 
 for line in sys.stdin:
 
