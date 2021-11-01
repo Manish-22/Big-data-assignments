@@ -21,4 +21,13 @@ rdd = rdd.filter(lambda x:x!=header)
 base_df = rdd.toDF(header)
 base_df.show(20)
 
+country_df = base_df.filter(base_df["Country"] == country)
+country_df.show(5)
 
+avg_ofavg_city = country_df.groupby("City").count()
+
+avg_ofavg_city.show(10)
+
+#df_grp = df.groupBy("author").count().orderBy("count", ascending=0).show(10)
+
+aggr_avg_city = country_df
