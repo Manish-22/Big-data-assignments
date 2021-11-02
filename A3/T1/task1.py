@@ -1,56 +1,71 @@
 from pyspark import SparkContext
+from pyspark.sql import SQLContext
+
+from pyspark.sql.types import FloatType
+
 import sys
 
-
-#country = sys.argv[0]
-#path = sys.argv[1]
-
-sc=SparkContext('local',"task1")
+sc=SparkContext.getOrCreate()
+sqlContext = SQLContext(sc)
 
 
-text_file = sc.textFile('./Desktop/assn_3/city_sample.csv')
+country = sys.argv[1]
+path = sys.argv[2]
+
+
+text_file = sc.textFile(path)
+
 
 rdd = text_file.map(lambda line:line.split(','))
 
 header = rdd.first()
+
 rdd = rdd.filter(lambda x:x!=header)
 
-#rdd = rdd.filter(lambda x:x if(country in x) else None)
+base_df = rdd.toDF(header)
+#base_df.show(20)
 
-rdd = rdd.map(lambda x:(x[2],x[1]))
+base_df.drop('dt')
+#base_df = base_df.withColumn("AverageTemperature",base_df.AverageTemperature.cast(FloatType()))
 
-#rdd.take(20)
+country_df = base_df.filter(base_df["Country"] == country)
+country_df = country_df.withColumn("AverageTemperature",country_df.AverageTemperature.cast(FloatType())).orderBy('City',ascending=True)
+
+#country_df.show(5)
+
+#count_ofavg_city = country_df.groupby("City").count()
+
+#count_ofavg_city.show(10)
+
+#df_grp = df.groupBy("author").count().orderBy("count", ascending=0).show(10)
+
+#country_df.AverageTemperature = country_df.AverageTemperature.cast(FloatType())
+
+avg_ofavg_city = country_df.groupBy("City").avg("AverageTemperature")
+#avg_ofavg_city.show(10)
 
 
-
-rdd1 = rdd.reduceByKey(lambda x,y:int(x)+int(y))		# aggr
-rdd1.take(20)
-
-rdd2 = rdd.combineByKey( (lambda x:(x,1)) , (lambda x,y:( int(x[0])+int(y),int(x[1])+1) ) , (lambda x,y: ( int(x[0]) + int(y[0]), int(x[1]) + int(y[1]))) )
-rdd2.take(20)								# key-wise aggr,count
-
-rdd3 = rdd2.mapValues(lambda x:int(x[0])/int(x[1]))
-rdd3.take(20)						# key -> avg val
+df_inter = country_df.join(avg_ofavg_city , country_df.City ==  country_df.City,"inner").drop(country_df["City"]).orderBy('City',ascending=True)
+#df_inter.show()
 
 
-rdd_n = rdd.groupByKey()
-rdd_n = rdd_n.mapValues(lambda x:list(x))
-rdd_n.take(20)						# key -> [list of vals]
+df_filtered = df_inter.filter(df_inter.AverageTemperature > df_inter['avg(AverageTemperature)'])
+#df_filtered.show()
+
+#df_filetered = df_filtered.groupBy("City").count() 
+#df_filetered = df_filtered.select("City") 
+#df_filtered.show()
 
 
-rdd5 = rdd_n.join(rdd3)
-rdd5.take(20)
+rdd = df_filtered.rdd
+#print(rdd.take(10))
+rdd = rdd.map(lambda x:x['City'])
+#rdd = rdd.collect()
 
-def count(x):
-	i=0
-	for j in x[0]:
-		if int(j)>int(x[1]):
-			i+=1
-	return i
-	
-rdd6 = rdd5.mapValues(count)
-rdd6.take(20)
+rdd = rdd.countByValue()
 
-print("RESULT\n:",rdd6.take(20))
+#print(rdd.take(100))
 
-rdd6.saveAsTextFile("./t1_op")
+for x in rdd.items():
+	print(x[0],x[1],sep='\t')
+
